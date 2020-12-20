@@ -29,7 +29,7 @@ var systemJSPrototype = SystemJS.prototype;
 
 systemJSPrototype.import = function (id, parentUrl) {
   var loader = this;
-  return Promise.resolve(loader.prepareImport())
+  return Promise.resolve()
   .then(function() {
     return loader.resolve(id, parentUrl);
   })

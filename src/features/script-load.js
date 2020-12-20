@@ -4,7 +4,7 @@
 import { hasDocument } from '../common.js';
 import { systemJSPrototype } from '../system-core.js';
 import { errMsg } from '../err-msg.js';
-import { importMap } from './import-maps.js';
+// import { importMap } from './import-maps.js';
 
 if (hasDocument) {
   window.addEventListener('error', function (evt) {
@@ -22,9 +22,9 @@ systemJSPrototype.createScript = function (url) {
   // - https://bugs.webkit.org/show_bug.cgi?id=171566
   if (url.indexOf(baseOrigin + '/'))
     script.crossOrigin = 'anonymous';
-  var integrity = importMap.integrity[url];
-  if (integrity)
-    script.integrity = integrity;
+  // var integrity = importMap.integrity[url];
+  // if (integrity)
+  //   script.integrity = integrity;
   script.src = url;
   return script;
 };
@@ -33,10 +33,11 @@ systemJSPrototype.createScript = function (url) {
 var lastAutoImportUrl, lastAutoImportDeps, lastAutoImportTimeout;
 var autoImportCandidates = {};
 var systemRegister = systemJSPrototype.register;
+var init = true;
 systemJSPrototype.register = function (deps, declare) {
-  if (hasDocument && document.readyState === 'loading' && typeof deps !== 'string') {
-    var scripts = document.querySelectorAll('script[src]');
-    var lastScript = scripts[scripts.length - 1];
+  if (hasDocument && init && typeof deps !== 'string') {
+    init = false;
+    var lastScript = document.querySelector('[data-main]');
     if (lastScript) {
       lastAutoImportUrl = lastScript.src;
       lastAutoImportDeps = deps;

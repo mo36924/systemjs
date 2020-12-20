@@ -1,5 +1,5 @@
 {
-  "name": "systemjs",
+  "name": "@mo36924/systemjs",
   "version": "6.8.2",
   "main": "dist/system-node.cjs",
   "exports": {
@@ -13,7 +13,10 @@
   "description": "Dynamic ES module loader",
   "repository": {
     "type": "git",
-    "url": "git://github.com/systemjs/systemjs"
+    "url": "git://github.com/mo36924/systemjs"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "author": "Guy Bedford",
   "type": "script",
