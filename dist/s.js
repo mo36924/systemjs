@@ -1,5 +1,5 @@
 /*
-* SJS 6.8.2
+* SJS 6.8.3
 * Minimal SystemJS Build
 */
 (function () {
@@ -8,11 +8,7 @@
     return (msg || "") + " (SystemJS https://git.io/JvFET#" + errCode + ")";
   }
 
-  var hasSymbol = typeof Symbol !== 'undefined';
-  var hasSelf = typeof self !== 'undefined';
   var hasDocument = typeof document !== 'undefined';
-
-  var envGlobal = hasSelf ? self : global;
 
   var baseUrl;
 
@@ -127,8 +123,7 @@
    * System.prototype.instantiate implementations
    */
 
-  var toStringTag = hasSymbol && Symbol.toStringTag;
-  var REGISTRY = hasSymbol ? Symbol() : '@';
+  var REGISTRY = '@';
 
   function SystemJS () {
     this[REGISTRY] = {};
@@ -188,8 +183,6 @@
 
     var importerSetters = [];
     var ns = Object.create(null);
-    if (toStringTag)
-      Object.defineProperty(ns, toStringTag, { value: 'Module' });
     
     var instantiatePromise = Promise.resolve()
     .then(function () {
@@ -401,7 +394,7 @@
     }
   }
 
-  envGlobal.System = new SystemJS();
+  self.System = new SystemJS();
 
   /*
    * Script instantiation loading

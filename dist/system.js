@@ -1,5 +1,5 @@
 /*
-* SystemJS 6.8.2
+* SystemJS 6.8.3
 */
 (function () {
 
@@ -7,11 +7,7 @@
     return (msg || "") + " (SystemJS Error#" + errCode + " " + "https://git.io/JvFET#" + errCode + ")";
   }
 
-  var hasSymbol = typeof Symbol !== 'undefined';
-  var hasSelf = typeof self !== 'undefined';
   var hasDocument = typeof document !== 'undefined';
-
-  var envGlobal = hasSelf ? self : global;
 
   var baseUrl;
 
@@ -211,8 +207,7 @@
    * System.prototype.instantiate implementations
    */
 
-  var toStringTag = hasSymbol && Symbol.toStringTag;
-  var REGISTRY = hasSymbol ? Symbol() : '@';
+  var REGISTRY = '@';
 
   function SystemJS () {
     this[REGISTRY] = {};
@@ -275,8 +270,6 @@
 
     var importerSetters = [];
     var ns = Object.create(null);
-    if (toStringTag)
-      Object.defineProperty(ns, toStringTag, { value: 'Module' });
     
     var instantiatePromise = Promise.resolve()
     .then(function () {
@@ -492,7 +485,7 @@
     }
   }
 
-  envGlobal.System = new SystemJS();
+  self.System = new SystemJS();
 
   /*
    * Script instantiation loading
@@ -712,7 +705,7 @@
    * Supports loading System.register in workers
    */
 
-  if (hasSelf && typeof importScripts === 'function')
+  if (typeof importScripts === 'function')
     systemJSPrototype.instantiate = function (url) {
       var loader = this;
       return Promise.resolve().then(function () {
@@ -889,7 +882,7 @@
     };
   })(typeof self !== 'undefined' ? self : global);
 
-  var toStringTag$1 = typeof Symbol !== 'undefined' && Symbol.toStringTag;
+  var toStringTag = typeof Symbol !== 'undefined' && Symbol.toStringTag;
 
   systemJSPrototype.get = function (id) {
     var load = this[REGISTRY][id];
@@ -910,13 +903,13 @@
       }
     }
     var ns;
-    if (toStringTag$1 && module[toStringTag$1] === 'Module') {
+    if (toStringTag && module[toStringTag] === 'Module') {
       ns = module;
     }
     else {
       ns = Object.assign(Object.create(null), module);
-      if (toStringTag$1)
-        Object.defineProperty(ns, toStringTag$1, { value: 'Module' });
+      if (toStringTag)
+        Object.defineProperty(ns, toStringTag, { value: 'Module' });
     }
 
     var done = Promise.resolve(ns);

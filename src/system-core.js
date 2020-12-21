@@ -14,12 +14,10 @@
  * Core comes with no System.prototype.resolve or
  * System.prototype.instantiate implementations
  */
-import { global, hasSymbol } from './common.js';
 import { errMsg } from './err-msg.js';
 export { systemJSPrototype, REGISTRY }
 
-var toStringTag = hasSymbol && Symbol.toStringTag;
-var REGISTRY = hasSymbol ? Symbol() : '@';
+var REGISTRY = '@';
 
 function SystemJS () {
   this[REGISTRY] = {};
@@ -83,8 +81,6 @@ export function getOrCreateLoad (loader, id, firstParentUrl) {
 
   var importerSetters = [];
   var ns = Object.create(null);
-  if (toStringTag)
-    Object.defineProperty(ns, toStringTag, { value: 'Module' });
   
   var instantiatePromise = Promise.resolve()
   .then(function () {
@@ -302,4 +298,4 @@ function postOrderExec (loader, load, seen) {
   }
 }
 
-global.System = new SystemJS();
+self.System = new SystemJS();

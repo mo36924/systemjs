@@ -638,16 +638,11 @@ function errMsg(errCode, msg) {
 // CONCATENATED MODULE: ./src/common.js
 
 
-var hasSymbol = typeof Symbol !== 'undefined';
-var hasSelf = typeof self !== 'undefined';
 var hasDocument = typeof document !== 'undefined';
 
-var envGlobal = hasSelf ? self : global;
-
-
 // Loader-scoped baseUrl and import map supported in Node.js only
-var BASE_URL = hasSymbol ? Symbol() : '_';
-var IMPORT_MAP = hasSymbol ? Symbol() : '#';
+var BASE_URL = '_';
+var IMPORT_MAP = '#';
 
 var baseUrl;
 
@@ -862,9 +857,7 @@ function resolveImportMap (importMap, resolvedOrPlain, parentUrl) {
 
 
 
-
-var toStringTag = hasSymbol && Symbol.toStringTag;
-var REGISTRY = hasSymbol ? Symbol() : '@';
+var REGISTRY = '@';
 
 function SystemJS () {
   this[REGISTRY] = {};
@@ -928,8 +921,6 @@ function getOrCreateLoad (loader, id, firstParentUrl) {
 
   var importerSetters = [];
   var ns = Object.create(null);
-  if (toStringTag)
-    Object.defineProperty(ns, toStringTag, { value: 'Module' });
   
   var instantiatePromise = Promise.resolve()
   .then(function () {
@@ -1147,7 +1138,7 @@ function postOrderExec (loader, load, seen) {
   }
 }
 
-envGlobal.System = new SystemJS();
+self.System = new SystemJS();
 
 // CONCATENATED MODULE: ./src/features/resolve.js
 
@@ -1170,7 +1161,7 @@ function throwUnresolved (id, parentUrl) {
 
 
 
-var registry_toStringTag = typeof Symbol !== 'undefined' && Symbol.toStringTag;
+var toStringTag = typeof Symbol !== 'undefined' && Symbol.toStringTag;
 
 systemJSPrototype.get = function (id) {
   var load = this[REGISTRY][id];
@@ -1191,13 +1182,13 @@ systemJSPrototype.set = function (id, module) {
     }
   }
   var ns;
-  if (registry_toStringTag && module[registry_toStringTag] === 'Module') {
+  if (toStringTag && module[toStringTag] === 'Module') {
     ns = module;
   }
   else {
     ns = Object.assign(Object.create(null), module);
-    if (registry_toStringTag)
-      Object.defineProperty(ns, registry_toStringTag, { value: 'Module' });
+    if (toStringTag)
+      Object.defineProperty(ns, toStringTag, { value: 'Module' });
   }
 
   var done = Promise.resolve(ns);

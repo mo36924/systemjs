@@ -1,15 +1,10 @@
 import { errMsg } from './err-msg.js';
 
-export var hasSymbol = typeof Symbol !== 'undefined';
-export var hasSelf = typeof self !== 'undefined';
 export var hasDocument = typeof document !== 'undefined';
 
-var envGlobal = hasSelf ? self : global;
-export { envGlobal as global };
-
 // Loader-scoped baseUrl and import map supported in Node.js only
-export var BASE_URL = hasSymbol ? Symbol() : '_';
-export var IMPORT_MAP = hasSymbol ? Symbol() : '#';
+export var BASE_URL = '_';
+export var IMPORT_MAP = '#';
 
 export var baseUrl;
 
