@@ -1,5 +1,5 @@
 /*
-* SystemJS 6.8.3
+* SystemJS 6.8.4
 */
 (function () {
 
@@ -523,7 +523,7 @@
   systemJSPrototype.register = function (deps, declare) {
     if (hasDocument && init && typeof deps !== 'string') {
       init = false;
-      var lastScript = document.querySelector('[data-main]');
+      var lastScript = document.getElementById('main');
       if (lastScript) {
         lastAutoImportUrl = lastScript.src;
         lastAutoImportDeps = deps;
