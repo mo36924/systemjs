@@ -1,5 +1,5 @@
 /*
-* SJS 6.8.4
+* SJS 6.8.5
 * Minimal SystemJS Build
 */
 (function () {
@@ -425,30 +425,27 @@
   };
 
   // Auto imports -> script tags can be inlined directly for load phase
-  var lastAutoImportUrl, lastAutoImportDeps, lastAutoImportTimeout;
+  var lastAutoImportDeps, lastAutoImportTimeout;
   var autoImportCandidates = {};
   var systemRegister = systemJSPrototype.register;
   var init = true;
   systemJSPrototype.register = function (deps, declare) {
-    if (hasDocument && init && typeof deps !== 'string') {
+    var loader = this;
+    var main = loader.main;
+    if (hasDocument && init && main && typeof deps !== 'string') {
       init = false;
-      var lastScript = document.getElementById('main');
-      if (lastScript) {
-        lastAutoImportUrl = lastScript.src;
-        lastAutoImportDeps = deps;
-        // if this is already a System load, then the instantiate has already begun
-        // so this re-import has no consequence
-        var loader = this;
-        lastAutoImportTimeout = setTimeout(function () {
-          autoImportCandidates[lastScript.src] = [deps, declare];
-          loader.import(lastScript.src);
-        });
-      }
+      lastAutoImportDeps = deps;
+      // if this is already a System load, then the instantiate has already begun
+      // so this re-import has no consequence
+      lastAutoImportTimeout = setTimeout(function () {
+        autoImportCandidates[main] = [deps, declare];
+        loader.import(main);
+      });
     }
     else {
       lastAutoImportDeps = undefined;
     }
-    return systemRegister.call(this, deps, declare);
+    return systemRegister.call(loader, deps, declare);
   };
 
   var lastWindowErrorUrl, lastWindowError;
